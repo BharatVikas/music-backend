@@ -5,22 +5,15 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ Configure CORS to Allow Your Frontend
-app.use(cors({
-    origin: "https://music-frontend-amber.vercel.app", // Replace with your frontend URL
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
-}));
+// ✅ Allow CORS for all origins
+app.use(cors());
 
-// ✅ Connect to MongoDB
-const dburl = process.env.DB_URL;
-mongoose.connect(dburl)
+mongoose.connect(process.env.DB_URL)
     .then(() => console.log("Connected to MongoDB Atlas Successfully"))
-    .catch((err) => console.log(err.message));
+    .catch(err => console.log(err.message));
 
 app.use(express.json());
 
-// ✅ Load Routes
 const adminrouter = require("./routes/adminroutes");
 const customerrouter = require("./routes/customerroutes");
 const managerrouter = require("./routes/managerroutes");
@@ -29,7 +22,6 @@ app.use("/admin", adminrouter);
 app.use("/customer", customerrouter);
 app.use("/manager", managerrouter);
 
-// ✅ Start Server
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);
