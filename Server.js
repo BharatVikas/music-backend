@@ -5,15 +5,23 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ Fix: Allow All Origins and Headers
-app.use(cors());
-app.options("*", cors()); // Handle preflight requests
+// ✅ Enable CORS for all origins
+app.use(cors({
+    origin: "*", // Allow all origins
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+}));
 
-// ✅ Allow CORS Manually for All Routes
+// ✅ Handle preflight requests manually
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200); // Respond to preflight request
+    }
+
     next();
 });
 
@@ -23,6 +31,7 @@ mongoose.connect(process.env.DB_URL)
 
 app.use(express.json());
 
+// ✅ Ensure correct route paths
 const adminrouter = require("./routes/adminroutes");
 const customerrouter = require("./routes/customerroutes");
 const managerrouter = require("./routes/managerroutes");
