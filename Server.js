@@ -9,7 +9,7 @@ mongoose.connect(dburl)
     .catch((err) => console.log(err.message));
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*" })); // ✅ Fix CORS
 app.use(express.json());
 
 const adminrouter = require("./routes/adminroutes");
@@ -20,4 +20,4 @@ app.use("/api/admin", adminrouter);
 app.use("/api/customer", customerrouter);
 app.use("/api/manager", managerrouter);
 
-module.exports = app;  // ✅ Export app for Vercel
+module.exports = app; // ✅ Important for Vercel
