@@ -1,42 +1,27 @@
-require("dotenv").config();
+require("dotenv").config(); // Load environment variables from .env
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const app = express();
-
-// ✅ Allow CORS for all requests
-app.use(cors());
-
-// ✅ Manually set CORS headers for preflight requests
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200); // ✅ Respond to preflight request
-    }
-
-    next();
-});
-
-mongoose.connect(process.env.DB_URL)
+const dburl = process.env.DB_URL; // Access DB URL from .env
+mongoose.connect(dburl)
     .then(() => console.log("Connected to MongoDB Atlas Successfully"))
-    .catch(err => console.log(err.message));
+    .catch((err) => console.log(err.message));
 
+const app = express();
+app.use(cors());
 app.use(express.json());
 
-// ✅ Ensure correct route paths
 const adminrouter = require("./routes/adminroutes");
 const customerrouter = require("./routes/customerroutes");
 const managerrouter = require("./routes/managerroutes");
 
-app.use("/admin", adminrouter);
-app.use("/customer", customerrouter);
-app.use("/manager", managerrouter);
+app.use("", adminrouter);
+app.use("", customerrouter);
+app.use("", managerrouter);
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8000; // Use port from .env or default
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);
 });
