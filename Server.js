@@ -7,7 +7,7 @@ const app = express();
 
 // ✅ Configure CORS to Allow Your Frontend
 app.use(cors({
-    origin: "https://music-frontend-omega.vercel.app", // Replace with your frontend URL
+    origin: "https://music-frontend-amber.vercel.app", // Replace with your frontend URL
     methods: "GET,POST,PUT,DELETE",
     credentials: true
 }));
