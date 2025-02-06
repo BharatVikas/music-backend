@@ -10,7 +10,15 @@ mongoose.connect(dburl)
     .catch((err) => console.log(err.message));
 
 const app = express();
-app.use(cors());
+
+// Configure CORS
+const corsOptions = {
+    origin: 'https://music-frontend-amber.vercel.app', // Specify the frontend origin
+    methods: 'GET,POST,PUT,DELETE', // Specify the allowed methods
+    allowedHeaders: 'Content-Type,Authorization' // Specify the allowed headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const adminrouter = require("./routes/adminroutes");
