@@ -5,8 +5,17 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ Allow CORS for all origins
+// ✅ Fix: Allow All Origins and Headers
 app.use(cors());
+app.options("*", cors()); // Handle preflight requests
+
+// ✅ Allow CORS Manually for All Routes
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
 
 mongoose.connect(process.env.DB_URL)
     .then(() => console.log("Connected to MongoDB Atlas Successfully"))
