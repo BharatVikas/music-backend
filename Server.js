@@ -1,27 +1,36 @@
-require("dotenv").config(); // Load environment variables from .env
-
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const dburl = process.env.DB_URL; // Access DB URL from .env
+const app = express();
+
+// ✅ Configure CORS to Allow Your Frontend
+app.use(cors({
+    origin: "https://music-frontend-omega.vercel.app", // Replace with your frontend URL
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+}));
+
+// ✅ Connect to MongoDB
+const dburl = process.env.DB_URL;
 mongoose.connect(dburl)
     .then(() => console.log("Connected to MongoDB Atlas Successfully"))
     .catch((err) => console.log(err.message));
 
-const app = express();
-app.use(cors());
 app.use(express.json());
 
+// ✅ Load Routes
 const adminrouter = require("./routes/adminroutes");
 const customerrouter = require("./routes/customerroutes");
 const managerrouter = require("./routes/managerroutes");
 
-app.use("", adminrouter);
-app.use("", customerrouter);
-app.use("", managerrouter);
+app.use("/admin", adminrouter);
+app.use("/customer", customerrouter);
+app.use("/manager", managerrouter);
 
-const port = process.env.PORT || 8000; // Use port from .env or default
+// ✅ Start Server
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);
 });
